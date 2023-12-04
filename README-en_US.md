@@ -4,7 +4,7 @@
 ![dot.gif](https://www.hxkj.vip/demo/calendar/dot.gif)
 ![week.gif](https://www.hxkj.vip/demo/calendar/week.gif)
 
-# react-mobile-calendar
+# react-mobile-calendar-lib
 
 - Support gesture sliding operation
 - Slide up and down to switch weekly / monthly mode
@@ -16,11 +16,11 @@
 ## Install
 
 ```
-npm i react-mobile-calendar
+npm i react-mobile-calendar-lib
 ```
 
 ```
-import { ReactHashCalendar } from 'react-mobile-calendar'
+import { ReactHashCalendar } from 'react-mobile-calendar-lib'
 
 function App () {
   return (

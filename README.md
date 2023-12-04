@@ -4,7 +4,7 @@
 ![dot.gif](https://www.hxkj.vip/demo/calendar/dot.gif)
 ![week.gif](https://www.hxkj.vip/demo/calendar/week.gif)
 
-# react-mobile-calendar
+# react-mobile-calendar-lib
 
 - 支持手势滑动操作
 - 上下滑动 切换 周/月 模式
@@ -14,11 +14,11 @@
 # 安装使用说明
 
 ```
-npm i react-mobile-calendar
+npm i react-mobile-calendar-lib
 ```
 
 ```
-import { ReactHashCalendar } from 'react-mobile-calendar'
+import { ReactHashCalendar } from 'react-mobile-calendar-lib'
 
 function App () {
   return (
