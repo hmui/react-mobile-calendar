@@ -168,7 +168,7 @@ class Examples extends React.Component<{}, State, {}> {
           showTodayButton={true}
           disabledWeekView={false}
           disabledDate={this.disabledDate}
-          isShowAction={true}
+          isShowAction={false}
           lang="CN"
           dateClickCallback={this.dateClick}
           format="YY-MM-DD"
