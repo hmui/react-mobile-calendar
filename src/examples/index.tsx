@@ -4,10 +4,10 @@ import React from 'react';
 const ReactHashCalendar = require('../components').ReactHashCalendar;
 
 const state = {
-  defaultDatetime: new Date(),
+  defaultDatetime: new Date('2023-12-08'),
   dateTime: new Date(),
   isShowCalendar: false,
-  clanderRef: null as any,
+  calendarRef: null as any,
   markDate: [
     '2020/11/24',
     '2020/11/22',
@@ -119,19 +119,18 @@ class Examples extends React.Component<{}, State, {}> {
 
   onRef = (ref: any) => {
     this.setState({
-      clanderRef: ref
+      calendarRef: ref
     })
   }
 
   setDay = () => {
-    console.log('set day')
-    const {clanderRef} = this.state
+    const {calendarRef} = this.state
 
-    clanderRef?.setDate( new Date('2023-12-06') )
+    calendarRef.setValue(new Date('2023-12-08'))
   }
 
   render() {
-    const { isShowCalendar, markDate, defaultDatetime, dateTime } = this.state;
+    const { isShowCalendar, markDate, defaultDatetime } = this.state;
     return (
       <div>
         <button onClick={this.showCalendar}>显示</button>
@@ -139,7 +138,7 @@ class Examples extends React.Component<{}, State, {}> {
           pickerType="datetime"
           model="dialog"
           disabledScroll=""
-          isShowWeekView={true}
+          isShowWeekView={false}
           showTodayButton={true}
           disabledWeekView={false}
           disabledDate={this.disabledDate}
@@ -177,8 +176,7 @@ class Examples extends React.Component<{}, State, {}> {
           scrollChangeDate={true}
           markType="dotcircle"
           weekStart="monday"
-          defaultDatetime={defaultDatetime}
-          value={dateTime}
+          // defaultDatetime={defaultDatetime}
           minuteStep={1}
         />
       </div>

@@ -30,7 +30,6 @@ const defaultProps = {
   notCurrentMonthDayClassName: "", // 不是当前展示月份日期的 className(例如日历前面几天与后面几天灰色部分)
   calendarTitleHeight: 60, // 操作栏高度
   defaultDate: new Date(),
-  value: new Date(),
   weekStart: "Sunday",
   markType: "dot", // 日期标记类型
   disabledDate: (date: Date) => false, // 禁用的日期
@@ -91,6 +90,7 @@ export type CalendarProps = {
   lang: "CN" | "EN";
   weekStart: typeof WEEK_LIST[number];
   onRef?: (ref: any) => void;
+  onTodayRef?: (ref: any) => void;
   weekSlot?: (week: string) => React.ReactNode;
   heightCallback?: (height: number) => void;
   dateChangeCallback?: (date: IDate) => void;
@@ -131,10 +131,10 @@ class Calendar extends React.Component<
       lang,
       weekStart,
       onRef,
+      onTodayRef,
       defaultDate,
       isShowWeekView,
       disabledWeekView,
-      value
     } = this.props;
     const { weekArray, checkedDate, isShowWeek } = this.state;
 
@@ -148,17 +148,12 @@ class Calendar extends React.Component<
     const end = calendarWeek.slice(0, weekStartIndex);
 
     onRef && onRef(this);
+    onTodayRef && onTodayRef(this);
 
     if (isShowWeekView && disabledWeekView) {
       throw new Error(
         "'isShowWeekView' and 'disabledWeekView' can't be used at the same time"
       );
-    }
-
-    if (isShowWeekView) {
-      setTimeout(() => {
-        this.showWeek();
-      });
     }
 
     if (defaultDate) {
@@ -170,6 +165,7 @@ class Calendar extends React.Component<
             month: defaultDate.getMonth(),
             day: defaultDate.getDate(),
           },
+          isTouching: true
         },
         () => {
           this.calculateCalendarOfThreeMonth(
@@ -178,7 +174,9 @@ class Calendar extends React.Component<
           );
 
           if (isShowWeek) {
-            this.showWeek();
+            this.showWeek(undefined, () => {
+              this.setState({ isTouching: true })
+            });
           }
         }
       );
@@ -189,6 +187,14 @@ class Calendar extends React.Component<
       weekStartIndex: weekStartIndex,
       calendarWeek: [...start, ...end],
     });
+
+    if (isShowWeekView) {
+      Promise.resolve().then(() => {
+        setTimeout(() => {
+          this.showWeek();
+        });
+      })
+    }
   }
 
   componentDidUpdate(
@@ -352,12 +358,46 @@ class Calendar extends React.Component<
     if (isShowWeek) {
       setTimeout(() => {
         this.setState({ isTouching: true });
-        this.showWeek();
+        this.showWeek(undefined, () => {
+          setTimeout(() => {
+            this.setState({ isTouching: false });
+          }, 50);
+        });
       }, transitionDuration * 1000);
     }
   };
 
-  showWeek = (checkedDate?: IDate) => {
+  setValue = (value: Date) => {
+    const { checkedDate, isShowWeek, transitionDuration } = this.state;
+    
+    const year = value.getFullYear();
+    const month = value.getMonth();
+    const day = value.getDate();
+
+    const nextCheckedDate = { ...checkedDate, year, month, day }
+    this.setState(
+      {
+        checkedDate: nextCheckedDate,
+        yearOfCurrentShow: year,
+        monthOfCurrentShow: month,
+      },
+      () => {
+        this.calculateCalendarOfThreeMonth(year, month, day);
+        if (isShowWeek) {
+          setTimeout(() => {
+            this.setState({ isTouching: true });
+            this.showWeek(nextCheckedDate, () => {
+              setTimeout(() => {
+                this.setState({ isTouching: false });
+              }, 50);
+            });
+          }, transitionDuration * 1000);
+        }
+      }
+    );
+  }
+
+  showWeek = (checkedDate?: IDate, cb?: () => void) => {
     function stopScrolling(touchEvent) {
       touchEvent.preventDefault();
     }
@@ -376,7 +416,7 @@ class Calendar extends React.Component<
       (calendarItemRef && calendarItemRef.offsetHeight) || 0;
 
     let daysArr: number[] = [];
-    calendarOfMonth[1].forEach((item: IDate) => {
+    calendarOfMonth[1]?.forEach((item: IDate) => {
       daysArr.push(item.day);
     });
     let dayIndexOfMonth = daysArr.indexOf(checkedDate.day);
@@ -466,6 +506,8 @@ class Calendar extends React.Component<
       nextWeek,
       isNextWeekInCurrentMonth: _isNextWeekInCurrentMonth,
     });
+
+    cb && cb()
   };
 
   showMonth = () => {
@@ -761,6 +803,10 @@ class Calendar extends React.Component<
   formatDisabledDate = (date: IDate): boolean => {
     const { disabledDate } = this.props;
 
+    if (!date) {
+      return false
+    }
+
     let fDate = new Date(`${date.year}/${date.month + 1}/${date.day}`);
 
     return disabledDate(fDate);
@@ -856,7 +902,8 @@ class Calendar extends React.Component<
 
   calculateCalendarOfThreeMonth = (
     year: number = yearNow,
-    month: number = monthNow
+    month: number = monthNow,
+    currentDay?: number
   ) => {
     const { currentChangeIsScroll, checkedDate } = this.state;
     const { scrollChangeDate } = this.props;
@@ -892,7 +939,7 @@ class Calendar extends React.Component<
 
     // 改变日期选择的日期
     let tempDate: IDate;
-    let day = checkedDate.day;
+    let day = currentDay || checkedDate.day;
     if (day > 30 || (day > 28 && month === 1)) {
       day = this.daysOfMonth(year)[month];
     }
@@ -1019,7 +1066,7 @@ class Calendar extends React.Component<
     const weekNode: React.ReactNode = (
       <div className="calendar_week" ref={this.weekTitleRef}>
         {calendarWeek.map((item) => (
-          <div className="calendar_item" key={`week-${item}`}>
+          <div className={`calendar_item ${['日', '六', 'SUN', 'SAT'].includes(item) ? 'calendar_weekend' : ''}`} key={`week-${item}`}>
             <p className="calendar_day">
               {(weekSlot && weekSlot(item)) || item}
             </p>

@@ -66,7 +66,7 @@ export default App;
 | todaySlot           | Customize today button content and style                                                                                                                                                                                    | () => React.ReactNode                 |       -        |
 | confirmSlot         | Customize dconfirmate button content and style                                                                                                                                                                              | () => React.ReactNode                 |       -        |
 | actionSlot          | Customize action content and style                                                                                                                                                                                          | () => React.ReactNode                 |       -        |
-| onRef               | Instance(ref.setDate(date: Date))                                                                                                                                                                                           | () => ref                             |       -        |
+| onRef               | Instance(ref.setValue(date: Date))                                                                                                                                                                                          | () => ref                             |       -        |
 
 ### Other
 

@@ -16,7 +16,6 @@ const defaultProps = {
   isShowAction: true, // 是否显示日历组件操作栏
   showTodayButton: true, // 是否显示返回今日按钮
   defaultDatetime: new Date(), // 默认时间
-  value: new Date(),
   disabledDate: (date: Date) => false, // 禁用的日期
   lang: 'CN', // 使用的语言包
 
@@ -181,11 +180,13 @@ class ReactHashCalendar extends React.Component<
     return formatDate(time, format, lang);
   }
 
-  today = () => {
-    const { disabledDate } = this.props;
-    console.log('disabledDate = ', disabledDate(new Date()))
-    if (disabledDate(new Date())) return;
+  today = (e: any) => {
+    e.persist()
+    e.stopPropagation()
 
+    const { disabledDate } = this.props;
+    if (disabledDate(new Date())) return;
+    
     const { calendarRef } = this.state;
     calendarRef && calendarRef.today();
   };
@@ -312,10 +313,6 @@ class ReactHashCalendar extends React.Component<
     dateClickCallback && dateClickCallback(fDate);
   };
 
-  setDate = (date: IDate) => {
-    this.dateClick(date)
-  }
-
   render() {
     const {
       model,
@@ -327,7 +324,6 @@ class ReactHashCalendar extends React.Component<
       actionSlot,
       confirmSlot,
       defaultDatetime,
-      value
     } = this.props;
 
     const {
@@ -400,21 +396,20 @@ class ReactHashCalendar extends React.Component<
           calendar_inline: model === 'inline',
         })}
         style={{
-          height: `${model === 'inline' ? calendarContentHeight : undefined}px`,
+          height: `${model === 'inline' ? calendarContentHeight + 3 : undefined}px`,
         }}
         onClick={this.close}
       >
         <div
           className="calendar_content"
-          style={{ height: `${calendarContentHeight}px` }}
+          style={{ height: `${calendarContentHeight + 3}px` }}
           onClick={this.stopEvent}
         >
           {isShowAction ? actionNode : null}
           <Calendar
-            onRef={this.onCalendarRef}
+            onTodayRef={this.onCalendarRef}
             {...this.props}
             defaultDate={defaultDatetime}
-            value={value}
             calendarTitleHeight={calendarTitleHeight}
             show={isShowCalendar}
             slideChangeCallback={this.slideChange}

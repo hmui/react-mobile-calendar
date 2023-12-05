@@ -14,12 +14,18 @@
     top: 0;
     flexAlign();
     background: white;
-    color: vice-font-color;
+    color: #333;
     z-index: 2;
     
     .calendar_item {
       padding-bottom: 0;
       flex: 1;
+      &.calendar_weekend {
+        color: #c0c4cc;
+      }
+    }
+    .calendar_day {
+      margin-bottom: 0;
     }
   }
   .calendar_group {
@@ -32,6 +38,19 @@
     overflow: hidden;
     transition: height 0.3s;
     -webkit-transition: height 0.3s;
+    &:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 3px;
+      width: 20px;
+      height: 2px;
+      margin: auto;
+      border-width: 1px 0;
+      border-style: solid;
+      border-color: rgba(0,0,0,.1);
+    }
   }
   .calendar_group ul {
     height: 100%;
@@ -40,7 +59,7 @@
     position: absolute;
     top: 0;
     // left: px2vw(4px);
-    left: 4px;
+    left: 0;
     bottom: 0;
     right: 0;
     height: 100%;
@@ -49,10 +68,13 @@
     flex-wrap: wrap;
     background: white;
     will-change: transform;
+    .calendar_item {
+      height: 60px;
+    }
   }
   .calendar_item {
-    width: 14.13333335%;
-    padding: 3px 0;
+    width: 14.2857142857%;
+    // padding: 3px 0;
     flexContent();
     flex-direction: column;
   }
