@@ -126,7 +126,7 @@ class Examples extends React.Component<{}, State, {}> {
   setDay = () => {
     const {calendarRef} = this.state
 
-    calendarRef.setValue(new Date('2023-12-08'))
+    calendarRef.setValue(new Date('2023-12-18'))
   }
 
   render() {

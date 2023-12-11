@@ -181,7 +181,7 @@ class ReactHashCalendar extends React.Component<
   }
 
   today = (e: any) => {
-    e.persist()
+    e.persist?.()
     e.stopPropagation()
 
     const { disabledDate } = this.props;
@@ -255,7 +255,7 @@ class ReactHashCalendar extends React.Component<
   };
 
   stopEvent = (e: any) => {
-    e.persist()
+    e.persist?.()
     e.stopPropagation();
   };
 

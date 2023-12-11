@@ -126,7 +126,7 @@ class TimePicker extends React.Component<
   };
 
   timeTouchStart = (e: any) => {
-    e.persist()
+    e.persist?.()
     e.stopPropagation();
     e.preventDefault();
     let timeStartY = e.changedTouches ? e.changedTouches[0].pageY : e.pageY;
@@ -141,7 +141,8 @@ class TimePicker extends React.Component<
   };
 
   timeTouchMove = (e: any, index: number) => {
-    e.persist()
+    e.persist?.()
+    e.stopPropagation();
     e.stopPropagation();
 
     const { timeStartY, timeStartUp } = this.state;
@@ -160,7 +161,8 @@ class TimePicker extends React.Component<
   };
 
   timeTouchEnd = (e: any, index: number) => {
-    e.persist()
+    e.persist?.()
+    e.stopPropagation();
     e.stopPropagation();
 
     const { minuteStep, timeChangeCallback } = this.props;

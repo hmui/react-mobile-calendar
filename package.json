@@ -1,6 +1,6 @@
 {
   "name": "react-mobile-calendar-lib",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "koalaplay",
   "repository": {
     "type": "git",
@@ -43,7 +43,6 @@
   },
   "dependencies": {
     "classnames": "^2.2.6",
-    "fastclick": "^1.0.6",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
   },

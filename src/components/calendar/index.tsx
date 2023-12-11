@@ -178,6 +178,10 @@ class Calendar extends React.Component<
               this.setState({ isTouching: true })
             });
           }
+
+          setTimeout(() => {
+            this.setState({ isTouching: false })
+          }, 300);
         }
       );
     }
@@ -303,6 +307,15 @@ class Calendar extends React.Component<
     }
   }
 
+  componentWillUnmount(): void {
+    window.removeEventListener('mousedown', this.stopScrolling)
+    window.removeEventListener('mousemove', this.preventScrolling)
+    window.removeEventListener('mouseup', this.touchEnd)
+    window.removeEventListener('touchstart', this.stopScrolling)
+    window.removeEventListener('touchmove', this.preventScrolling)
+    window.removeEventListener('touchend', this.touchEnd)
+  }
+
   setDate = (value) => {
     const {
       checkedDate,
@@ -401,12 +414,8 @@ class Calendar extends React.Component<
   }
 
   showWeek = (checkedDate?: IDate, cb?: () => void) => {
-    function stopScrolling(touchEvent) {
-      touchEvent.preventDefault();
-    }
-
-    document.addEventListener("touchstart", stopScrolling, { passive: false });
-    document.addEventListener("mousedown", stopScrolling, { passive: false });
+    window.addEventListener("touchstart", this.stopScrolling, { passive: false });
+    window.addEventListener("mousedown", this.stopScrolling, { passive: false });
     const {
       calendarOfMonth,
       checkedDate: _checkedDate,
@@ -503,8 +512,8 @@ class Calendar extends React.Component<
     }
     this.state.calendarOfMonthShow[0].splice(sliceStart, 7, ...lastWeek);
     this.state.calendarOfMonthShow[2].splice(sliceStart, 7, ...nextWeek);
-    document.addEventListener("touchmove", stopScrolling, { passive: false });
-    document.addEventListener("mousemove", stopScrolling, { passive: false });
+    window.addEventListener("touchmove", this.preventScrolling, { passive: false });
+    window.addEventListener("mousemove", this.preventScrolling, { passive: false });
     this.setState({
       nextWeek,
       isNextWeekInCurrentMonth: _isNextWeekInCurrentMonth,
@@ -512,14 +521,17 @@ class Calendar extends React.Component<
 
     cb && cb()
   };
+  preventScrolling = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  stopScrolling = (event) => {
+    event.stopPropagation();
+  }
 
   showMonth = () => {
-    function stopScrolling(touchEvent) {
-      touchEvent.preventDefault();
-    }
-
-    document.addEventListener("touchstart", stopScrolling, { passive: false });
-    document.addEventListener("mousedown", stopScrolling, { passive: false });
+    window.addEventListener("touchstart", this.stopScrolling, { passive: false });
+    window.addEventListener("mousedown", this.stopScrolling, { passive: false });
     const { checkedDate, calendarItemRef } = this.state;
 
     const calendarItemHeight =
@@ -532,8 +544,8 @@ class Calendar extends React.Component<
       isNextWeekInCurrentMonth: false,
       calendarGroupHeight: calendarItemHeight * 6,
     });
-    document.addEventListener("touchmove", stopScrolling, { passive: false });
-    document.addEventListener("mousemove", stopScrolling, { passive: false });
+    window.addEventListener("touchmove", this.preventScrolling, { passive: false });
+    window.addEventListener("mousemove", this.preventScrolling, { passive: false });
     this.calculateCalendarOfThreeMonth(checkedDate.year, checkedDate.month);
   };
 
@@ -561,7 +573,7 @@ class Calendar extends React.Component<
   };
 
   touchStart = (event: any) => {
-    event.persist()
+    event.persist?.()
     event.stopPropagation();
 
     const { touchStartCallback } = this.props;
@@ -578,7 +590,8 @@ class Calendar extends React.Component<
   };
 
   touchMove = (event: any) => {
-    event.persist()
+    event.persist?.()
+    event.preventDefault();
     event.stopPropagation();
 
     const { isTouching } = this.state
@@ -621,10 +634,12 @@ class Calendar extends React.Component<
   };
 
   touchEnd = (event: any) => {
-    event.persist()
+    event.persist?.()
+    // event.preventDefault();
     event.stopPropagation();
 
     const isMobile = event.touches
+
 
     const { isTouching } = this.state
     if (!isTouching) {
