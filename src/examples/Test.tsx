@@ -1,7 +1,8 @@
 // import { ReactHashCalendar } from '../components';
+import { ReactHashCalendar } from '../../lib';
 import React, { useEffect, createRef, useState } from 'react';
 
-const ReactHashCalendar = require('../components').ReactHashCalendar;
+// const ReactHashCalendar = require('../components').ReactHashCalendar;
 
 const Test = () => {
   const actionRef = createRef<any>()
@@ -21,7 +22,8 @@ const Test = () => {
       <div>
 
         <div>
-        <button onClick={setDay}>设置某天</button></div>
+          <button onClick={setDay}>设置某天</button>
+        </div>
         <ReactHashCalendar
           pickerType="date"
           model="inline"

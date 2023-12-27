@@ -7,7 +7,7 @@ import './style/reset.css';
 ReactDOM.render(
   <React.StrictMode>
     <Examples></Examples>
-
+    <div>----------------------------------------</div>
     <Test />
   </React.StrictMode>,
   document.getElementById('root')

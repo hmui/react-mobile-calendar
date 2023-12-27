@@ -92,7 +92,6 @@ export type CalendarProps = {
   lang: "CN" | "EN";
   weekStart: typeof WEEK_LIST[number];
   onRef?: (ref: any) => void;
-  actionRef?: React.MutableRefObject<any>;
   onTodayRef?: (ref: any) => void;
   weekSlot?: (week: string) => React.ReactNode;
   heightCallback?: (height: number) => void;
@@ -134,7 +133,6 @@ class Calendar extends React.Component<
       lang,
       weekStart,
       onRef,
-      actionRef,
       onTodayRef,
       defaultDate,
       isShowWeekView,

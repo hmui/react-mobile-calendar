@@ -156,29 +156,6 @@ class Examples extends React.Component<{}, State, {}> {
           defaultDatetime={defaultDatetime}
           minuteStep={1}
         />
-
-        <div>
-        <button onClick={this.setDay}>设置某天</button></div>
-        <ReactHashCalendar
-          pickerType="date"
-          model="inline"
-          onRef={this.onRef}
-          disabledScroll=""
-          isShowWeekView={true}
-          showTodayButton={true}
-          disabledWeekView={false}
-          disabledDate={this.disabledDate}
-          isShowAction={false}
-          lang="CN"
-          dateClickCallback={this.dateClick}
-          format="YY-MM-DD"
-          markDate={markDate}
-          scrollChangeDate={true}
-          markType="dotcircle"
-          weekStart="monday"
-          // defaultDatetime={defaultDatetime}
-          minuteStep={1}
-        />
       </div>
     );
   }

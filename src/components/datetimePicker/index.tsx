@@ -84,7 +84,6 @@ export type DateTimeProps = {
     }
   ) => React.ReactNode;
   onRef?: (ref: any) => void;
-  actionRef?: React.MutableRefObject<any>;
   forwardedRef?: React.MutableRefObject<any>;
   slideChangeCallback?: (direction: string) => void;
   touchStartCallback?: (e: any) => void;
@@ -105,7 +104,7 @@ class ReactHashCalendar extends React.Component<
   public state: State = state;
 
   componentDidMount() {
-    const { model, lang, onVisibleChange, onRef, actionRef } = this.props;
+    const { model, lang, onVisibleChange, onRef } = this.props;
     onRef && onRef(this)
 
     if (model === 'inline') {
@@ -326,6 +325,7 @@ class ReactHashCalendar extends React.Component<
       actionSlot,
       confirmSlot,
       defaultDatetime,
+      forwardedRef,
     } = this.props;
 
     const {
@@ -411,7 +411,7 @@ class ReactHashCalendar extends React.Component<
           <Calendar
             onTodayRef={this.onCalendarRef}
             {...this.props}
-            ref={this.props.forwardedRef}
+            ref={forwardedRef}
             defaultDate={defaultDatetime}
             calendarTitleHeight={calendarTitleHeight}
             show={isShowCalendar}
@@ -437,4 +437,4 @@ class ReactHashCalendar extends React.Component<
   }
 }
 
-export default forwardRef((props = {}, ref: any) => <ReactHashCalendar {...props} forwardedRef={ref} />);
+export default forwardRef((props: any = {}, ref: any) => <ReactHashCalendar {...props} forwardedRef={ref} />);
