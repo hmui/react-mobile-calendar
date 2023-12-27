@@ -11,6 +11,8 @@ import { formatDate } from "../../utils/util";
 import classNames from "classnames";
 import "./style.styl";
 
+const isMobile = navigator.userAgent.toLowerCase().includes('mobile')
+
 const yearNow = new Date().getFullYear();
 const monthNow = new Date().getMonth();
 const dayNow = new Date().getDate();
@@ -308,12 +310,15 @@ class Calendar extends React.Component<
   }
 
   componentWillUnmount(): void {
-    window.removeEventListener('mousedown', this.stopScrolling)
-    window.removeEventListener('mousemove', this.preventScrolling)
-    window.removeEventListener('mouseup', this.touchEnd)
-    window.removeEventListener('touchstart', this.stopScrolling)
-    window.removeEventListener('touchmove', this.preventScrolling)
-    window.removeEventListener('touchend', this.touchEnd)
+    if (isMobile) {
+      window.removeEventListener('touchstart', this.stopScrolling)
+      window.removeEventListener('touchmove', this.preventScrolling)
+      window.removeEventListener('touchend', this.touchEnd)
+    } else {
+      window.removeEventListener('mousedown', this.stopScrolling)
+      window.removeEventListener('mousemove', this.preventScrolling)
+      window.removeEventListener('mouseup', this.touchEnd)
+    }
   }
 
   setDate = (value) => {
@@ -414,8 +419,8 @@ class Calendar extends React.Component<
   }
 
   showWeek = (checkedDate?: IDate, cb?: () => void) => {
-    window.addEventListener("touchstart", this.stopScrolling, { passive: false });
-    window.addEventListener("mousedown", this.stopScrolling, { passive: false });
+    isMobile && window.addEventListener("touchstart", this.stopScrolling, { passive: false });
+    !isMobile && window.addEventListener("mousedown", this.stopScrolling, { passive: false });
     const {
       calendarOfMonth,
       checkedDate: _checkedDate,
@@ -512,8 +517,8 @@ class Calendar extends React.Component<
     }
     this.state.calendarOfMonthShow[0].splice(sliceStart, 7, ...lastWeek);
     this.state.calendarOfMonthShow[2].splice(sliceStart, 7, ...nextWeek);
-    window.addEventListener("touchmove", this.preventScrolling, { passive: false });
-    window.addEventListener("mousemove", this.preventScrolling, { passive: false });
+    isMobile && window.addEventListener("touchmove", this.preventScrolling, { passive: false });
+    !isMobile && window.addEventListener("mousemove", this.preventScrolling, { passive: false });
     this.setState({
       nextWeek,
       isNextWeekInCurrentMonth: _isNextWeekInCurrentMonth,
@@ -530,8 +535,8 @@ class Calendar extends React.Component<
   }
 
   showMonth = () => {
-    window.addEventListener("touchstart", this.stopScrolling, { passive: false });
-    window.addEventListener("mousedown", this.stopScrolling, { passive: false });
+    isMobile && window.addEventListener("touchstart", this.stopScrolling, { passive: false });
+    !isMobile && window.addEventListener("mousedown", this.stopScrolling, { passive: false });
     const { checkedDate, calendarItemRef } = this.state;
 
     const calendarItemHeight =
@@ -544,8 +549,8 @@ class Calendar extends React.Component<
       isNextWeekInCurrentMonth: false,
       calendarGroupHeight: calendarItemHeight * 6,
     });
-    window.addEventListener("touchmove", this.preventScrolling, { passive: false });
-    window.addEventListener("mousemove", this.preventScrolling, { passive: false });
+    isMobile && window.addEventListener("touchmove", this.preventScrolling, { passive: false });
+    !isMobile && window.addEventListener("mousemove", this.preventScrolling, { passive: false });
     this.calculateCalendarOfThreeMonth(checkedDate.year, checkedDate.month);
   };
 
@@ -591,8 +596,8 @@ class Calendar extends React.Component<
 
   touchMove = (event: any) => {
     event.persist?.()
-    event.preventDefault();
-    event.stopPropagation();
+    !isMobile && event.preventDefault?.();
+    event.stopPropagation?.();
 
     const { isTouching } = this.state
     if (!isTouching) {
