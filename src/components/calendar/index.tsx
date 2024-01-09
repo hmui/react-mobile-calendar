@@ -386,7 +386,7 @@ class Calendar extends React.Component<
     }
   };
 
-  setValue = (value: Date) => {
+  setValue = (value: Date, triggerCb: boolean = true) => {
     const { checkedDate, isShowWeek, transitionDuration } = this.state;
     const {dateClickCallback} = this.props
     
@@ -416,7 +416,9 @@ class Calendar extends React.Component<
       }
     );
     
-    dateClickCallback && dateClickCallback(nextCheckedDate);
+    if (triggerCb && dateClickCallback) {
+      dateClickCallback(nextCheckedDate);
+    }
   }
 
   showWeek = (checkedDate?: IDate, cb?: () => void) => {
